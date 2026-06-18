@@ -158,7 +158,7 @@ const messages: Message[] = [
 ];
 
 function Inbox404() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [selectedFolder, setSelectedFolder] = useState("Bandeja de Entrada");
   const [selectedId, setSelectedId] = useState<number>(1);
 
