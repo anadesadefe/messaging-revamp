@@ -694,4 +694,3 @@ Escribe aquí tu mensaje..."
     </div>
   );
 }
-}
