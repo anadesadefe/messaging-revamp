@@ -607,6 +607,64 @@ function Inbox404() {
       </div>
 
       {composeOpen && <ComposeModal onClose={() => setComposeOpen(false)} />}
+
+      {tagMenu && (
+        <div
+          className="glass-panel fixed z-50 w-60 rounded-2xl p-2 shadow-2xl shadow-black/20"
+          style={{ left: tagMenu.x, top: tagMenu.y }}
+          onClick={(e) => e.stopPropagation()}
+          onContextMenu={(e) => e.preventDefault()}
+          role="menu"
+        >
+          <div className="flex items-center justify-between px-2 py-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+              Etiquetar mensaje
+            </span>
+            <button
+              onClick={() => setTagMenu(null)}
+              className="grid size-5 place-items-center rounded-md text-muted-foreground hover:bg-foreground/5"
+              aria-label="Cerrar"
+            >
+              <X className="size-3.5" />
+            </button>
+          </div>
+          <div className="my-1 h-px bg-border/60" />
+          <ul className="max-h-64 space-y-0.5 overflow-y-auto">
+            {labels.map((l) => {
+              const on = (messageLabels[tagMenu.id] ?? []).includes(l.name);
+              return (
+                <li key={l.name}>
+                  <button
+                    onClick={() => toggleLabel(tagMenu.id, l.name)}
+                    className={`flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm transition ${
+                      on ? "bg-primary/10 text-primary" : "text-foreground/85 hover:bg-foreground/5"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <span className={`size-2.5 rounded-full ${l.color}`} />
+                      {l.name}
+                    </span>
+                    {on && <CheckSquare className="size-3.5" />}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="my-1 h-px bg-border/60" />
+          <button
+            onClick={() => {
+              setMessageLabels((prev) => ({ ...prev, [tagMenu.id]: [] }));
+              setTagMenu(null);
+            }}
+            className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-rose-500 hover:bg-rose-500/10"
+          >
+            <Trash className="size-3.5" /> Quitar etiquetas
+          </button>
+          <button className="mt-0.5 flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-foreground/80 hover:bg-foreground/5">
+            <Plus className="size-3.5" /> Crear etiqueta…
+          </button>
+        </div>
+      )}
     </div>
   );
 }
