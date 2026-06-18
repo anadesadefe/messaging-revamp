@@ -532,16 +532,166 @@ function Inbox404() {
 
           <footer className="border-t border-border/60 p-5">
             <div className="flex gap-2">
-              <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:scale-[1.01] hover:bg-primary/90 active:scale-[0.99]">
+              <button
+                onClick={() => setComposeOpen(true)}
+                className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:scale-[1.01] hover:bg-primary/90 active:scale-[0.99]"
+              >
                 <Reply className="size-4" /> Responder
               </button>
-              <button className="flex items-center gap-2 rounded-2xl border border-border/60 bg-foreground/[0.03] px-4 py-3 text-sm font-semibold text-foreground/80 transition hover:bg-foreground/5">
+              <button
+                onClick={() => setComposeOpen(true)}
+                className="flex items-center gap-2 rounded-2xl border border-border/60 bg-foreground/[0.03] px-4 py-3 text-sm font-semibold text-foreground/80 transition hover:bg-foreground/5"
+              >
                 <Forward className="size-4" /> Reenviar
               </button>
             </div>
           </footer>
         </section>
       </div>
+
+      {composeOpen && <ComposeModal onClose={() => setComposeOpen(false)} />}
     </div>
   );
+}
+
+function ComposeModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center sm:p-6"
+      role="dialog"
+      aria-modal="true"
+    >
+      {/* Backdrop */}
+      <button
+        aria-label="Cerrar"
+        onClick={onClose}
+        className="absolute inset-0 bg-background/40 backdrop-blur-md"
+      />
+
+      {/* Panel */}
+      <div className="glass-panel relative z-10 flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl animate-in fade-in zoom-in-95 duration-200">
+        {/* Header */}
+        <header className="flex items-center justify-between border-b border-border/60 px-5 py-4">
+          <div className="flex items-center gap-3">
+            <div className="grid size-9 place-items-center rounded-xl bg-primary/15 text-primary ring-1 ring-primary/20">
+              <PenSquare className="size-4" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold tracking-tight">Nuevo mensaje</h2>
+              <p className="text-[11px] text-muted-foreground">Redactando como elena@nexus.app</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1">
+            <button className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-foreground/5 hover:text-foreground">
+              <MoreHorizontal className="size-4" />
+            </button>
+            <button
+              onClick={onClose}
+              className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+        </header>
+
+        {/* Form */}
+        <div className="flex-1 overflow-y-auto px-5 py-4">
+          {/* Para */}
+          <div className="flex items-center gap-3 border-b border-border/40 py-2.5">
+            <label className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Para
+            </label>
+            <div className="flex flex-1 flex-wrap items-center gap-1.5">
+              <span className="flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary ring-1 ring-primary/20">
+                <span className="grid size-4 place-items-center rounded-full bg-gradient-to-br from-violet-400 to-indigo-500 text-[8px] text-white">
+                  MV
+                </span>
+                Marcos Vinicius
+                <X className="size-3 cursor-pointer opacity-60 hover:opacity-100" />
+              </span>
+              <input
+                type="text"
+                placeholder="Añadir destinatario..."
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              />
+            </div>
+            <div className="flex gap-2 text-[11px] font-semibold text-muted-foreground">
+              <button className="hover:text-foreground">Cc</button>
+              <button className="hover:text-foreground">Cco</button>
+            </div>
+          </div>
+
+          {/* Asunto */}
+          <div className="flex items-center gap-3 border-b border-border/40 py-2.5">
+            <label className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Asunto
+            </label>
+            <input
+              type="text"
+              placeholder="Escribe un asunto claro y conciso"
+              className="flex-1 bg-transparent text-sm font-medium outline-none placeholder:text-muted-foreground"
+            />
+          </div>
+
+          {/* Body */}
+          <textarea
+            placeholder="Hola,
+
+Escribe aquí tu mensaje..."
+            className="mt-4 min-h-[220px] w-full resize-none bg-transparent text-sm leading-relaxed outline-none placeholder:text-muted-foreground"
+          />
+
+          {/* Attachment chip */}
+          <div className="mt-2 flex flex-wrap gap-2">
+            <div className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-foreground/[0.03] px-3 py-2">
+              <div className="grid size-8 place-items-center rounded-lg bg-primary/10 text-primary">
+                <Paperclip className="size-3.5" />
+              </div>
+              <div className="text-xs">
+                <p className="font-semibold">Propuesta-v3.pdf</p>
+                <p className="text-[10px] text-muted-foreground">1.8 MB</p>
+              </div>
+              <button className="ml-1 grid size-6 place-items-center rounded-md text-muted-foreground hover:bg-foreground/5 hover:text-foreground">
+                <X className="size-3" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Toolbar */}
+        <div className="flex items-center justify-between border-t border-border/60 bg-foreground/[0.02] px-3 py-2">
+          <div className="flex items-center gap-0.5">
+            {[Bold, Italic, Underline, List, Link2, ImageIcon, Smile].map((Icon, i) => (
+              <button
+                key={i}
+                className="grid size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground"
+              >
+                <Icon className="size-3.5" />
+              </button>
+            ))}
+            <div className="mx-1 h-5 w-px bg-border/60" />
+            <button className="grid size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground">
+              <Paperclip className="size-3.5" />
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onClose}
+              className="hidden items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground sm:inline-flex"
+            >
+              <Trash className="size-3.5" /> Descartar
+            </button>
+            <button className="inline-flex items-center gap-1.5 rounded-xl border border-border/60 bg-foreground/[0.03] px-3 py-2 text-xs font-semibold text-foreground/80 transition hover:bg-foreground/5">
+              <Save className="size-3.5" /> Borrador
+            </button>
+            <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-lg shadow-primary/25 transition hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]">
+              <SendIcon className="size-3.5" /> Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 }
