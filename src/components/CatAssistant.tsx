@@ -25,7 +25,7 @@ export function CatAssistant() {
     {
       id: 1,
       role: "assistant",
-      text: "¡Hola! Soy **Miso**, tu asistente felino. 🐾 Puedo resumir hilos, redactar respuestas y etiquetar mensajes. ¿En qué te ayudo?",
+      text: "¡Hola! Soy **Catia**, tu asistente felino. 🐾 Puedo resumir hilos, redactar respuestas y etiquetar mensajes. ¿En qué te ayudo?",
     },
   ]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -58,7 +58,7 @@ export function CatAssistant() {
       {/* Floating bubble */}
       <button
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Cerrar asistente" : "Abrir asistente Miso"}
+        aria-label={open ? "Cerrar asistente" : "Abrir asistente Catia"}
         className="group fixed bottom-5 right-5 z-40 grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-xl shadow-primary/40 ring-1 ring-primary/30 transition hover:scale-105 active:scale-95"
       >
         <span className="pointer-events-none absolute inset-0 rounded-full bg-primary/40 opacity-0 transition group-hover:opacity-100 group-hover:blur-xl" />
@@ -74,7 +74,7 @@ export function CatAssistant() {
       {open && (
         <div
           role="dialog"
-          aria-label="Asistente Miso"
+          aria-label="Asistente Catia"
           className="glass-panel fixed bottom-24 right-5 z-40 flex h-[min(560px,calc(100vh-7rem))] w-[min(380px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-3xl shadow-2xl shadow-black/30 animate-in fade-in slide-in-from-bottom-4 duration-200"
         >
           {/* Header */}
@@ -85,7 +85,7 @@ export function CatAssistant() {
             </div>
             <div className="min-w-0 flex-1">
               <p className="flex items-center gap-1.5 text-sm font-bold">
-                Miso <Sparkles className="size-3 text-amber-400" />
+                Catia <Sparkles className="size-3 text-amber-400" />
               </p>
               <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
                 Asistente felino · en línea
@@ -175,7 +175,7 @@ export function CatAssistant() {
                   }
                 }}
                 rows={1}
-                placeholder="Pregunta algo a Miso…"
+                placeholder="Pregunta algo a Catia…"
                 className="flex-1 resize-none bg-transparent px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground"
               />
               <button
