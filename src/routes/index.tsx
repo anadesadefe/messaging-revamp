@@ -510,15 +510,18 @@ function Inbox404() {
             <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
               <div className="min-w-0">
                 <div className="mb-2 flex flex-wrap gap-2">
-                  {selected.tag && (
-                    <span
-                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ${
-                        tagStyles[selected.tag.tone]
-                      }`}
-                    >
-                      {selected.tag.label}
-                    </span>
-                  )}
+                  {(messageLabels[selected.id] ?? []).map((name) => {
+                    const lab = labels.find((l) => l.name === name);
+                    return (
+                      <span
+                        key={name}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-foreground/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-foreground/80 ring-1 ring-border/60"
+                      >
+                        <span className={`size-1.5 rounded-full ${lab?.color ?? "bg-foreground/30"}`} />
+                        {name}
+                      </span>
+                    );
+                  })}
                   <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary ring-1 ring-primary/20">
                     Bandeja
                   </span>
