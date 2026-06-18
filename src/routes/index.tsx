@@ -175,10 +175,48 @@ function Inbox404() {
   const [selectedFolder, setSelectedFolder] = useState("Bandeja de Entrada");
   const [selectedId, setSelectedId] = useState<number>(1);
   const [composeOpen, setComposeOpen] = useState(false);
+  const [messageLabels, setMessageLabels] = useState<Record<number, string[]>>({
+    1: ["URGENTE"],
+    2: ["Trabajo"],
+    4: ["Finanzas"],
+  });
+  const [tagMenu, setTagMenu] = useState<{ x: number; y: number; id: number } | null>(null);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
+
+  useEffect(() => {
+    if (!tagMenu) return;
+    const close = () => setTagMenu(null);
+    window.addEventListener("click", close);
+    window.addEventListener("scroll", close, true);
+    window.addEventListener("resize", close);
+    return () => {
+      window.removeEventListener("click", close);
+      window.removeEventListener("scroll", close, true);
+      window.removeEventListener("resize", close);
+    };
+  }, [tagMenu]);
+
+  const toggleLabel = (id: number, name: string) => {
+    setMessageLabels((prev) => {
+      const cur = prev[id] ?? [];
+      const next = cur.includes(name) ? cur.filter((n) => n !== name) : [...cur, name];
+      return { ...prev, [id]: next };
+    });
+  };
+
+  const openTagMenu = (e: React.MouseEvent, id: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const PAD = 8;
+    const W = 240;
+    const H = 320;
+    const x = Math.min(e.clientX, window.innerWidth - W - PAD);
+    const y = Math.min(e.clientY, window.innerHeight - H - PAD);
+    setTagMenu({ x, y, id });
+  };
 
   const selected = messages.find((m) => m.id === selectedId)!;
 
@@ -188,6 +226,10 @@ function Inbox404() {
     info: "bg-sky-500/15 text-sky-700 ring-sky-500/20 dark:text-sky-300",
     neutral: "bg-muted text-muted-foreground ring-border",
   };
+
+  const labelChipStyle = (color: string) =>
+    `inline-flex items-center gap-1.5 rounded-full bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground/80 ring-1 ring-border/60`;
+
 
   return (
     <div className="min-h-screen w-full p-3 sm:p-6">
