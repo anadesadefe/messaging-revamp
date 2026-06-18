@@ -609,6 +609,8 @@ function Inbox404() {
 
       {composeOpen && <ComposeModal onClose={() => setComposeOpen(false)} />}
 
+      <CatAssistant />
+
       {tagMenu && (
         <div
           className="glass-panel fixed z-50 w-60 rounded-2xl p-2 shadow-2xl shadow-black/20"
