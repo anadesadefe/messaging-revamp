@@ -517,7 +517,7 @@ function Inbox404() {
 
           <footer className="border-t border-border/60 p-5">
             <div className="flex gap-2">
-              <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-primary-glow px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:scale-[1.01] hover:shadow-primary/40 active:scale-[0.99]">
+              <button className="flex flex-1 items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:scale-[1.01] hover:bg-primary/90 active:scale-[0.99]">
                 <Reply className="size-4" /> Responder
               </button>
               <button className="flex items-center gap-2 rounded-2xl border border-border/60 bg-foreground/[0.03] px-4 py-3 text-sm font-semibold text-foreground/80 transition hover:bg-foreground/5">
