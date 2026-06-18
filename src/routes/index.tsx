@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { CatAssistant } from "@/components/CatAssistant";
 import {
   Inbox,
   Send,
@@ -607,6 +608,8 @@ function Inbox404() {
       </div>
 
       {composeOpen && <ComposeModal onClose={() => setComposeOpen(false)} />}
+
+      <CatAssistant />
 
       {tagMenu && (
         <div
