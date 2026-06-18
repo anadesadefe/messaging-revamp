@@ -400,10 +400,15 @@ function Inbox404() {
             <div className="space-y-1.5">
               {messages.map((m) => {
                 const active = selectedId === m.id;
+                const assigned = messageLabels[m.id] ?? [];
                 return (
                   <button
                     key={m.id}
                     onClick={() => setSelectedId(m.id)}
+                    onContextMenu={(e) => {
+                      setSelectedId(m.id);
+                      openTagMenu(e, m.id);
+                    }}
                     className={`group relative w-full rounded-2xl p-3.5 text-left transition-all ${
                       active
                         ? "bg-gradient-to-br from-primary/10 to-primary-glow/5 ring-1 ring-primary/30 shadow-sm"
@@ -440,16 +445,16 @@ function Inbox404() {
                           {m.subject}
                         </p>
                         <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{m.preview}</p>
-                        <div className="mt-2 flex items-center gap-2">
-                          {m.tag && (
-                            <span
-                              className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ${
-                                tagStyles[m.tag.tone]
-                              }`}
-                            >
-                              {m.tag.label}
-                            </span>
-                          )}
+                        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                          {assigned.map((name) => {
+                            const lab = labels.find((l) => l.name === name);
+                            return (
+                              <span key={name} className={labelChipStyle(lab?.color ?? "")}>
+                                <span className={`size-1.5 rounded-full ${lab?.color ?? "bg-foreground/30"}`} />
+                                {name}
+                              </span>
+                            );
+                          })}
                           {m.hasAttachment && (
                             <Paperclip className="size-3 text-muted-foreground" />
                           )}
@@ -462,6 +467,7 @@ function Inbox404() {
                   </button>
                 );
               })}
+
             </div>
           </div>
         </section>
