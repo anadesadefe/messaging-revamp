@@ -63,11 +63,13 @@ const folders: Folder[] = [
   { icon: Trash2, label: "Papelera", count: 1 },
 ];
 
-const labels = [
+const labels: { color: string; name: string; count?: number }[] = [
   { color: "bg-rose-500", name: "URGENTE", count: 1 },
   { color: "bg-amber-400", name: "Trabajo" },
   { color: "bg-emerald-400", name: "Personal" },
   { color: "bg-sky-400", name: "Finanzas" },
+  { color: "bg-violet-400", name: "Importante" },
+  { color: "bg-slate-400", name: "Seguimiento" },
 ];
 
 type Message = {
@@ -173,10 +175,48 @@ function Inbox404() {
   const [selectedFolder, setSelectedFolder] = useState("Bandeja de Entrada");
   const [selectedId, setSelectedId] = useState<number>(1);
   const [composeOpen, setComposeOpen] = useState(false);
+  const [messageLabels, setMessageLabels] = useState<Record<number, string[]>>({
+    1: ["URGENTE"],
+    2: ["Trabajo"],
+    4: ["Finanzas"],
+  });
+  const [tagMenu, setTagMenu] = useState<{ x: number; y: number; id: number } | null>(null);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
+
+  useEffect(() => {
+    if (!tagMenu) return;
+    const close = () => setTagMenu(null);
+    window.addEventListener("click", close);
+    window.addEventListener("scroll", close, true);
+    window.addEventListener("resize", close);
+    return () => {
+      window.removeEventListener("click", close);
+      window.removeEventListener("scroll", close, true);
+      window.removeEventListener("resize", close);
+    };
+  }, [tagMenu]);
+
+  const toggleLabel = (id: number, name: string) => {
+    setMessageLabels((prev) => {
+      const cur = prev[id] ?? [];
+      const next = cur.includes(name) ? cur.filter((n) => n !== name) : [...cur, name];
+      return { ...prev, [id]: next };
+    });
+  };
+
+  const openTagMenu = (e: React.MouseEvent, id: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const PAD = 8;
+    const W = 240;
+    const H = 320;
+    const x = Math.min(e.clientX, window.innerWidth - W - PAD);
+    const y = Math.min(e.clientY, window.innerHeight - H - PAD);
+    setTagMenu({ x, y, id });
+  };
 
   const selected = messages.find((m) => m.id === selectedId)!;
 
@@ -186,6 +226,10 @@ function Inbox404() {
     info: "bg-sky-500/15 text-sky-700 ring-sky-500/20 dark:text-sky-300",
     neutral: "bg-muted text-muted-foreground ring-border",
   };
+
+  const labelChipStyle = (color: string) =>
+    `inline-flex items-center gap-1.5 rounded-full bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground/80 ring-1 ring-border/60`;
+
 
   return (
     <div className="min-h-screen w-full p-3 sm:p-6">
@@ -356,10 +400,15 @@ function Inbox404() {
             <div className="space-y-1.5">
               {messages.map((m) => {
                 const active = selectedId === m.id;
+                const assigned = messageLabels[m.id] ?? [];
                 return (
                   <button
                     key={m.id}
                     onClick={() => setSelectedId(m.id)}
+                    onContextMenu={(e) => {
+                      setSelectedId(m.id);
+                      openTagMenu(e, m.id);
+                    }}
                     className={`group relative w-full rounded-2xl p-3.5 text-left transition-all ${
                       active
                         ? "bg-gradient-to-br from-primary/10 to-primary-glow/5 ring-1 ring-primary/30 shadow-sm"
@@ -396,16 +445,16 @@ function Inbox404() {
                           {m.subject}
                         </p>
                         <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{m.preview}</p>
-                        <div className="mt-2 flex items-center gap-2">
-                          {m.tag && (
-                            <span
-                              className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ${
-                                tagStyles[m.tag.tone]
-                              }`}
-                            >
-                              {m.tag.label}
-                            </span>
-                          )}
+                        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                          {assigned.map((name) => {
+                            const lab = labels.find((l) => l.name === name);
+                            return (
+                              <span key={name} className={labelChipStyle(lab?.color ?? "")}>
+                                <span className={`size-1.5 rounded-full ${lab?.color ?? "bg-foreground/30"}`} />
+                                {name}
+                              </span>
+                            );
+                          })}
                           {m.hasAttachment && (
                             <Paperclip className="size-3 text-muted-foreground" />
                           )}
@@ -418,6 +467,7 @@ function Inbox404() {
                   </button>
                 );
               })}
+
             </div>
           </div>
         </section>
@@ -435,8 +485,12 @@ function Inbox404() {
               <button className="rounded-xl border border-border/60 bg-foreground/[0.03] px-3 py-2 text-xs font-semibold text-foreground/80 transition hover:bg-foreground/5">
                 <Trash2 className="inline size-3.5" />
               </button>
-              <button className="rounded-xl border border-border/60 bg-foreground/[0.03] px-3 py-2 text-xs font-semibold text-foreground/80 transition hover:bg-foreground/5">
-                <Tag className="inline size-3.5" />
+              <button
+                onClick={(e) => openTagMenu(e, selectedId)}
+                className="flex items-center gap-1.5 rounded-xl border border-border/60 bg-foreground/[0.03] px-3 py-2 text-xs font-semibold text-foreground/80 transition hover:bg-foreground/5"
+                title="Etiquetar (clic derecho en un mensaje)"
+              >
+                <Tag className="size-3.5" /> Etiquetar
               </button>
             </div>
             <div className="flex items-center gap-2">
@@ -456,15 +510,18 @@ function Inbox404() {
             <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
               <div className="min-w-0">
                 <div className="mb-2 flex flex-wrap gap-2">
-                  {selected.tag && (
-                    <span
-                      className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ${
-                        tagStyles[selected.tag.tone]
-                      }`}
-                    >
-                      {selected.tag.label}
-                    </span>
-                  )}
+                  {(messageLabels[selected.id] ?? []).map((name) => {
+                    const lab = labels.find((l) => l.name === name);
+                    return (
+                      <span
+                        key={name}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-foreground/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-foreground/80 ring-1 ring-border/60"
+                      >
+                        <span className={`size-1.5 rounded-full ${lab?.color ?? "bg-foreground/30"}`} />
+                        {name}
+                      </span>
+                    );
+                  })}
                   <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary ring-1 ring-primary/20">
                     Bandeja
                   </span>
@@ -550,6 +607,64 @@ function Inbox404() {
       </div>
 
       {composeOpen && <ComposeModal onClose={() => setComposeOpen(false)} />}
+
+      {tagMenu && (
+        <div
+          className="glass-panel fixed z-50 w-60 rounded-2xl p-2 shadow-2xl shadow-black/20"
+          style={{ left: tagMenu.x, top: tagMenu.y }}
+          onClick={(e) => e.stopPropagation()}
+          onContextMenu={(e) => e.preventDefault()}
+          role="menu"
+        >
+          <div className="flex items-center justify-between px-2 py-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+              Etiquetar mensaje
+            </span>
+            <button
+              onClick={() => setTagMenu(null)}
+              className="grid size-5 place-items-center rounded-md text-muted-foreground hover:bg-foreground/5"
+              aria-label="Cerrar"
+            >
+              <X className="size-3.5" />
+            </button>
+          </div>
+          <div className="my-1 h-px bg-border/60" />
+          <ul className="max-h-64 space-y-0.5 overflow-y-auto">
+            {labels.map((l) => {
+              const on = (messageLabels[tagMenu.id] ?? []).includes(l.name);
+              return (
+                <li key={l.name}>
+                  <button
+                    onClick={() => toggleLabel(tagMenu.id, l.name)}
+                    className={`flex w-full items-center justify-between rounded-lg px-2 py-2 text-sm transition ${
+                      on ? "bg-primary/10 text-primary" : "text-foreground/85 hover:bg-foreground/5"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <span className={`size-2.5 rounded-full ${l.color}`} />
+                      {l.name}
+                    </span>
+                    {on && <CheckSquare className="size-3.5" />}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="my-1 h-px bg-border/60" />
+          <button
+            onClick={() => {
+              setMessageLabels((prev) => ({ ...prev, [tagMenu.id]: [] }));
+              setTagMenu(null);
+            }}
+            className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-rose-500 hover:bg-rose-500/10"
+          >
+            <Trash className="size-3.5" /> Quitar etiquetas
+          </button>
+          <button className="mt-0.5 flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-foreground/80 hover:bg-foreground/5">
+            <Plus className="size-3.5" /> Crear etiqueta…
+          </button>
+        </div>
+      )}
     </div>
   );
 }
