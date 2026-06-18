@@ -194,7 +194,7 @@ function Inbox404() {
           </div>
 
           {/* Compose */}
-          <button className="group mb-6 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-primary-glow px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:scale-[1.02] hover:shadow-primary/40 active:scale-[0.98]">
+          <button className="group mb-6 flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]">
             <PenSquare className="size-4" />
             Redactar
           </button>
