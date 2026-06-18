@@ -25,6 +25,17 @@ import {
   MoreHorizontal,
   ChevronLeft,
   Plus,
+  X,
+  Image as ImageIcon,
+  Smile,
+  Link2,
+  Bold,
+  Italic,
+  Underline,
+  List,
+  Send as SendIcon,
+  Save,
+  Trash,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
