@@ -172,6 +172,7 @@ function Inbox404() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [selectedFolder, setSelectedFolder] = useState("Bandeja de Entrada");
   const [selectedId, setSelectedId] = useState<number>(1);
+  const [composeOpen, setComposeOpen] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
