@@ -485,8 +485,12 @@ function Inbox404() {
               <button className="rounded-xl border border-border/60 bg-foreground/[0.03] px-3 py-2 text-xs font-semibold text-foreground/80 transition hover:bg-foreground/5">
                 <Trash2 className="inline size-3.5" />
               </button>
-              <button className="rounded-xl border border-border/60 bg-foreground/[0.03] px-3 py-2 text-xs font-semibold text-foreground/80 transition hover:bg-foreground/5">
-                <Tag className="inline size-3.5" />
+              <button
+                onClick={(e) => openTagMenu(e, selectedId)}
+                className="flex items-center gap-1.5 rounded-xl border border-border/60 bg-foreground/[0.03] px-3 py-2 text-xs font-semibold text-foreground/80 transition hover:bg-foreground/5"
+                title="Etiquetar (clic derecho en un mensaje)"
+              >
+                <Tag className="size-3.5" /> Etiquetar
               </button>
             </div>
             <div className="flex items-center gap-2">
