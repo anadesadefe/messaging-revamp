@@ -63,11 +63,13 @@ const folders: Folder[] = [
   { icon: Trash2, label: "Papelera", count: 1 },
 ];
 
-const labels = [
+const labels: { color: string; name: string; count?: number }[] = [
   { color: "bg-rose-500", name: "URGENTE", count: 1 },
   { color: "bg-amber-400", name: "Trabajo" },
   { color: "bg-emerald-400", name: "Personal" },
   { color: "bg-sky-400", name: "Finanzas" },
+  { color: "bg-violet-400", name: "Importante" },
+  { color: "bg-slate-400", name: "Seguimiento" },
 ];
 
 type Message = {
