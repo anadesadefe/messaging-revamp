@@ -305,28 +305,31 @@ function ForosPage() {
           </div>
 
           {/* Subforum header */}
-          <div className="glass-panel rounded-3xl p-6">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className={`grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br ${activeSubforum.sub.color} text-base font-bold text-white shadow-lg`}>
-                  {activeSubforum.sub.initials}
-                </div>
-                <div>
-                  <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                    {activeSubforum.forum.name} · {activeSubforum.sub.org}
+          <div className="overflow-hidden rounded-3xl bg-card/70 ring-1 ring-border/80 backdrop-blur-xl">
+            <div className="h-1 bg-primary/80" />
+            <div className="p-6">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className={`grid h-14 w-14 place-items-center rounded-2xl bg-primary text-base font-bold text-primary-foreground shadow-lg`}>
+                    {activeSubforum.sub.initials}
                   </div>
-                  <h2 className="text-2xl font-semibold tracking-tight">{activeSubforum.sub.name}</h2>
-                  <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                    Coordinación operativa, incidencias y acuerdos entre los equipos del subforo.
-                  </p>
+                  <div>
+                    <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      {activeSubforum.forum.name} · {activeSubforum.sub.org}
+                    </div>
+                    <h2 className="text-2xl font-semibold tracking-tight">{activeSubforum.sub.name}</h2>
+                    <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+                      Coordinación operativa, incidencias y acuerdos entre los equipos del subforo.
+                    </p>
+                  </div>
                 </div>
+                <button className="flex items-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-90">
+                  <Plus className="h-4 w-4" /> Crear hilo
+                </button>
               </div>
-              <button className="flex items-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-90">
-                <Plus className="h-4 w-4" /> Crear hilo
-              </button>
             </div>
 
-            <div className="mt-5 flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 border-t border-border/60 bg-foreground/[0.03] px-6 py-3">
               {(["todos", "sin-leer", "fijados"] as const).map((f) => (
                 <button
                   key={f}
