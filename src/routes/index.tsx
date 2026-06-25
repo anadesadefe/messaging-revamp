@@ -374,6 +374,12 @@ function Inbox404() {
               />
               <Filter className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             </div>
+            <Link
+              to="/foros"
+              className="hidden h-10 shrink-0 items-center gap-2 rounded-xl border border-border/60 bg-foreground/[0.03] px-3 text-sm font-medium text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground sm:flex"
+            >
+              <MessagesSquare className="size-4" /> Foros
+            </Link>
             <button
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
               className="grid size-10 shrink-0 place-items-center rounded-xl border border-border/60 bg-foreground/[0.03] text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground"
