@@ -37,6 +37,7 @@ import {
   Send as SendIcon,
   Save,
   Trash,
+  MessagesSquare,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
