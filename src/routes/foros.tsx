@@ -253,6 +253,7 @@ function ForosPage() {
   const [activeSub, setActiveSub] = useState<string>("ln");
   const [filter, setFilter] = useState<"todos" | "sin-leer" | "fijados">("todos");
   const [composeOpen, setComposeOpen] = useState(false);
+  const [activeThreadId, setActiveThreadId] = useState<number | null>(null);
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
