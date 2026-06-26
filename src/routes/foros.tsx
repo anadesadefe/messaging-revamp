@@ -178,6 +178,75 @@ const threads: Thread[] = [
   },
 ];
 
+type Post = {
+  id: number;
+  author: string;
+  initials: string;
+  org: string;
+  role?: string;
+  time: string;
+  body: string;
+  likes: number;
+  color: string;
+  isOp?: boolean;
+  replyTo?: string;
+};
+
+const threadPostsByThread: Record<number, Post[]> = {
+  1: [
+    {
+      id: 1,
+      author: "Ana Requena",
+      initials: "AR",
+      org: "Logística Norte",
+      role: "Autora · Coord. operaciones",
+      time: "Hace 12 min",
+      isOp: true,
+      color: "from-rose-400 to-orange-400",
+      likes: 12,
+      body: "Confirmado el retraso de 36h en la ruta R-204 por el cierre temporal del paso fronterizo. Propongo:\n\n1) Reasignar las entregas críticas (clientes A1, A3, B7) a la ruta R-118.\n2) Avisar a recepción de Nordia para reorganizar los turnos del jueves.\n3) Revisar penalizaciones contractuales con el transportista.\n\n¿Cómo lo veis desde planificación?",
+    },
+    {
+      id: 2,
+      author: "Marc Soler",
+      initials: "MS",
+      org: "Nordia",
+      role: "Planificación",
+      time: "Hace 9 min",
+      color: "from-sky-400 to-indigo-500",
+      likes: 4,
+      body: "Por planificación lo veo viable. La R-118 tiene capacidad para asumir A1 y A3, pero B7 va muy justa. ¿Podríamos partir B7 entre R-118 y R-205?",
+    },
+    {
+      id: 3,
+      author: "Elena Costa",
+      initials: "EC",
+      org: "Logística Norte",
+      role: "Recepción",
+      time: "Hace 4 min",
+      color: "from-emerald-400 to-teal-500",
+      likes: 2,
+      replyTo: "Marc Soler",
+      body: "Desde recepción podemos reorganizar los turnos del jueves sin problema si confirmamos antes de las 18:00 de hoy. Mejor que enviéis el plan definitivo por aquí para dejar traza.",
+    },
+    {
+      id: 4,
+      author: "Laura Vidal",
+      initials: "LV",
+      org: "Nordia",
+      role: "Admin",
+      time: "Hace 1 min",
+      color: "from-fuchsia-400 to-violet-500",
+      likes: 1,
+      body: "Apruebo el plan. Marc, prepara la propuesta de reparto B7 y la cuelgas aquí en cuanto la tengas. Yo me encargo de hablar con el transportista por el SLA.",
+    },
+  ],
+};
+
+function getThreadPosts(threadId: number): Post[] {
+  return threadPostsByThread[threadId] ?? threadPostsByThread[1];
+}
+
 function ForosPage() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [openForums, setOpenForums] = useState<Record<string, boolean>>({ ops: true, proj: true, qa: false });
