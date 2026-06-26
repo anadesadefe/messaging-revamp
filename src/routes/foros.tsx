@@ -333,7 +333,10 @@ function ForosPage() {
                     </p>
                   </div>
                 </div>
-                <button className="flex items-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-90">
+                <button
+                  onClick={() => setComposeOpen(true)}
+                  className="flex items-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-90"
+                >
                   <Plus className="h-4 w-4" /> Crear hilo
                 </button>
               </div>
