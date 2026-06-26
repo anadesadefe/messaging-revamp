@@ -512,6 +512,8 @@ function ForosPage() {
               </article>
             ))}
           </div>
+          </>
+          )}
         </main>
       </div>
 
