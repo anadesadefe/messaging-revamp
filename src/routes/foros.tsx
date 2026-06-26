@@ -728,3 +728,172 @@ function CreateThreadModal({
     </div>
   );
 }
+
+function ThreadDetail({
+  thread,
+  forumName,
+  subforumName,
+  onBack,
+}: {
+  thread: Thread;
+  forumName: string;
+  subforumName: string;
+  onBack: () => void;
+}) {
+  const posts = getThreadPosts(thread.id);
+  const [reply, setReply] = useState("");
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Thread header */}
+      <div className="overflow-hidden rounded-3xl bg-card/70 ring-1 ring-border/80 backdrop-blur-xl">
+        <div className="h-1 bg-primary/80" />
+        <div className="p-6">
+          <button
+            onClick={onBack}
+            className="mb-3 inline-flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-muted-foreground ring-1 ring-border/60 transition hover:bg-foreground/5 hover:text-foreground"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" /> Volver al subforo
+          </button>
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            {forumName} · {subforumName}
+          </div>
+          <div className="mt-1 flex flex-wrap items-start justify-between gap-3">
+            <h2 className="max-w-3xl text-2xl font-semibold tracking-tight">{thread.title}</h2>
+            {thread.pinned && (
+              <span className="flex items-center gap-1 rounded-full bg-amber-400/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-amber-500 ring-1 ring-amber-400/30">
+                <Pin className="h-3 w-3" /> Fijado
+              </span>
+            )}
+          </div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {thread.tags.map((tag) => (
+              <span
+                key={tag.label}
+                className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ring-1 ${tag.tone}`}
+              >
+                {tag.label}
+              </span>
+            ))}
+            <div className="ml-auto flex items-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <MessageCircle className="h-3.5 w-3.5" /> {posts.length} mensajes
+              </span>
+              <span className="flex items-center gap-1">
+                <Eye className="h-3.5 w-3.5" /> {thread.views}
+              </span>
+              <span className="flex items-center gap-1">
+                <ThumbsUp className="h-3.5 w-3.5" /> {thread.likes}
+              </span>
+              <button className="rounded-lg p-1 transition hover:bg-foreground/5 hover:text-foreground">
+                <Share2 className="h-3.5 w-3.5" />
+              </button>
+              <button className="rounded-lg p-1 transition hover:bg-foreground/5 hover:text-foreground">
+                <Bookmark className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Posts */}
+      <div className="space-y-3">
+        {posts.map((p, idx) => (
+          <article
+            key={p.id}
+            className={`glass-panel rounded-3xl p-5 ${p.isOp ? "ring-1 ring-primary/30" : ""}`}
+          >
+            <div className="flex gap-4">
+              <div className="flex flex-col items-center gap-2">
+                <div
+                  className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${p.color} text-xs font-bold text-white shadow`}
+                >
+                  {p.initials}
+                </div>
+                <span className="rounded-full bg-foreground/[0.04] px-2 py-0.5 text-[10px] font-medium text-muted-foreground ring-1 ring-border/60">
+                  #{idx + 1}
+                </span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <span className="font-semibold text-foreground">{p.author}</span>
+                  {p.isOp && (
+                    <span className="rounded-full bg-primary/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary ring-1 ring-primary/30">
+                      OP
+                    </span>
+                  )}
+                  <span>·</span>
+                  <span>{p.org}</span>
+                  {p.role && (
+                    <>
+                      <span>·</span>
+                      <span>{p.role}</span>
+                    </>
+                  )}
+                  <span>·</span>
+                  <span>{p.time}</span>
+                </div>
+                {p.replyTo && (
+                  <div className="mt-2 flex items-center gap-1.5 rounded-xl bg-foreground/[0.04] px-2.5 py-1 text-[11px] text-muted-foreground ring-1 ring-border/60">
+                    <CornerDownRight className="h-3 w-3" />
+                    En respuesta a <span className="font-medium text-foreground">{p.replyTo}</span>
+                  </div>
+                )}
+                <div className="mt-2 whitespace-pre-line text-sm leading-relaxed text-foreground/90">
+                  {p.body}
+                </div>
+                <div className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
+                  <button className="flex items-center gap-1.5 rounded-lg px-2 py-1 transition hover:bg-foreground/5 hover:text-foreground">
+                    <ThumbsUp className="h-3.5 w-3.5" /> {p.likes}
+                  </button>
+                  <button className="flex items-center gap-1.5 rounded-lg px-2 py-1 transition hover:bg-foreground/5 hover:text-foreground">
+                    <Reply className="h-3.5 w-3.5" /> Responder
+                  </button>
+                  <button className="flex items-center gap-1.5 rounded-lg px-2 py-1 transition hover:bg-foreground/5 hover:text-foreground">
+                    <Quote className="h-3.5 w-3.5" /> Citar
+                  </button>
+                  <button className="ml-auto rounded-lg p-1 transition hover:bg-foreground/5 hover:text-foreground">
+                    <MoreHorizontal className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* Reply box */}
+      <div className="glass-panel rounded-3xl p-4">
+        <div className="mb-2 flex items-center gap-2 text-xs font-medium text-muted-foreground">
+          <Reply className="h-3.5 w-3.5" /> Responder al hilo
+        </div>
+        <textarea
+          value={reply}
+          onChange={(e) => setReply(e.target.value)}
+          rows={3}
+          placeholder="Escribe tu respuesta…"
+          className="glass-soft w-full resize-none rounded-2xl px-4 py-3 text-sm leading-relaxed outline-none ring-1 ring-border/60 placeholder:text-muted-foreground focus:ring-primary/50"
+        />
+        <div className="mt-2 flex items-center justify-between">
+          <div className="flex items-center gap-1">
+            {[Bold, Italic, Link2, Paperclip, ImageIcon, Smile].map((Icon, i) => (
+              <button
+                key={i}
+                className="rounded-lg p-1.5 text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground"
+              >
+                <Icon className="h-3.5 w-3.5" />
+              </button>
+            ))}
+          </div>
+          <button
+            disabled={!reply.trim()}
+            onClick={() => setReply("")}
+            className="flex items-center gap-2 rounded-2xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Send className="h-4 w-4" /> Publicar respuesta
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
