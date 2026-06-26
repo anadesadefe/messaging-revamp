@@ -212,9 +212,7 @@ function ForosPage() {
             </div>
           </div>
 
-          <button className="mb-4 flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-90">
-            <Plus className="h-4 w-4" /> Nuevo hilo
-          </button>
+
 
           <nav className="mb-4 space-y-1">
             <SidebarItem icon={Mail} label="Sin leer" count={6} />
