@@ -21,6 +21,17 @@ import {
   MoreHorizontal,
   Hash,
   Mail,
+  X,
+  Bold,
+  Italic,
+  Link2,
+  ListOrdered,
+  List,
+  Paperclip,
+  Image as ImageIcon,
+  Smile,
+  Send,
+  Tag,
 } from "lucide-react";
 
 export const Route = createFileRoute("/foros")({
