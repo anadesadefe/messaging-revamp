@@ -388,6 +388,15 @@ function ForosPage() {
             </button>
           </div>
 
+          {activeThreadId ? (
+            <ThreadDetail
+              thread={threads.find((t) => t.id === activeThreadId)!}
+              forumName={activeSubforum.forum.name}
+              subforumName={activeSubforum.sub.name}
+              onBack={() => setActiveThreadId(null)}
+            />
+          ) : (
+          <>
           {/* Subforum header */}
           <div className="overflow-hidden rounded-3xl bg-card/70 ring-1 ring-border/80 backdrop-blur-xl">
             <div className="h-1 bg-primary/80" />
