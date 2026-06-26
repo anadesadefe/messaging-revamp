@@ -448,7 +448,11 @@ function ForosPage() {
           {/* Thread list */}
           <div className="space-y-3">
             {visibleThreads.map((t) => (
-              <article key={t.id} className="glass-panel group rounded-3xl p-5 transition hover:ring-1 hover:ring-primary/30">
+              <article
+                key={t.id}
+                onClick={() => setActiveThreadId(t.id)}
+                className="glass-panel group cursor-pointer rounded-3xl p-5 transition hover:ring-1 hover:ring-primary/30"
+              >
                 <div className="flex gap-4">
                   <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-indigo-400 to-violet-500 text-xs font-bold text-white shadow">
                     {t.authorInitials}
