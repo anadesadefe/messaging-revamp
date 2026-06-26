@@ -21,6 +21,17 @@ import {
   MoreHorizontal,
   Hash,
   Mail,
+  X,
+  Bold,
+  Italic,
+  Link2,
+  ListOrdered,
+  List,
+  Paperclip,
+  Image as ImageIcon,
+  Smile,
+  Send,
+  Tag,
 } from "lucide-react";
 
 export const Route = createFileRoute("/foros")({
@@ -168,6 +179,7 @@ function ForosPage() {
   const [openForums, setOpenForums] = useState<Record<string, boolean>>({ ops: true, proj: true, qa: false });
   const [activeSub, setActiveSub] = useState<string>("ln");
   const [filter, setFilter] = useState<"todos" | "sin-leer" | "fijados">("todos");
+  const [composeOpen, setComposeOpen] = useState(false);
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
@@ -200,9 +212,7 @@ function ForosPage() {
             </div>
           </div>
 
-          <button className="mb-4 flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-90">
-            <Plus className="h-4 w-4" /> Nuevo hilo
-          </button>
+
 
           <nav className="mb-4 space-y-1">
             <SidebarItem icon={Mail} label="Sin leer" count={6} />
@@ -323,7 +333,10 @@ function ForosPage() {
                     </p>
                   </div>
                 </div>
-                <button className="flex items-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-90">
+                <button
+                  onClick={() => setComposeOpen(true)}
+                  className="flex items-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-90"
+                >
                   <Plus className="h-4 w-4" /> Crear hilo
                 </button>
               </div>
@@ -415,6 +428,14 @@ function ForosPage() {
         </main>
       </div>
 
+      {composeOpen && (
+        <CreateThreadModal
+          subforumName={activeSubforum.sub.name}
+          forumName={activeSubforum.forum.name}
+          onClose={() => setComposeOpen(false)}
+        />
+      )}
+
       <CatAssistant />
     </div>
   );
@@ -429,5 +450,192 @@ function SidebarItem({ icon: Icon, label, count }: { icon: React.ElementType; la
         <span className="rounded-full bg-foreground/10 px-1.5 py-0.5 text-[10px] font-semibold">{count}</span>
       ) : null}
     </button>
+  );
+}
+
+function CreateThreadModal({
+  subforumName,
+  forumName,
+  onClose,
+}: {
+  subforumName: string;
+  forumName: string;
+  onClose: () => void;
+}) {
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
+  const [pinned, setPinned] = useState(false);
+
+  const availableTags = ["Urgente", "Logística", "Revisión", "Facturación", "Anuncio", "Pregunta"];
+
+  const toggleTag = (t: string) =>
+    setTags((s) => (s.includes(t) ? s.filter((x) => x !== t) : [...s, t]));
+
+  const addCustomTag = () => {
+    const v = tagInput.trim();
+    if (v && !tags.includes(v)) setTags((s) => [...s, v]);
+    setTagInput("");
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-background/60 p-4 backdrop-blur-md sm:items-center">
+      <div
+        className="absolute inset-0"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <div className="glass-panel relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl shadow-2xl">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-border/60 px-6 py-4">
+          <div className="min-w-0">
+            <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              {forumName} · {subforumName}
+            </div>
+            <h3 className="truncate text-base font-semibold tracking-tight">Crear nuevo hilo</h3>
+          </div>
+          <button
+            onClick={onClose}
+            className="rounded-xl p-2 text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground"
+            aria-label="Cerrar"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 space-y-4 overflow-y-auto px-6 py-5">
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Título</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Resume el tema del hilo en una frase…"
+              className="glass-soft w-full rounded-2xl px-4 py-3 text-sm outline-none ring-1 ring-border/60 placeholder:text-muted-foreground focus:ring-primary/50"
+            />
+          </div>
+
+          <div>
+            <div className="mb-1.5 flex items-center justify-between">
+              <label className="text-xs font-medium text-muted-foreground">Contenido</label>
+              <div className="flex items-center gap-0.5 rounded-xl bg-foreground/[0.04] p-1 ring-1 ring-border/60">
+                {[Bold, Italic, Link2, List, ListOrdered].map((Icon, i) => (
+                  <button
+                    key={i}
+                    className="rounded-lg p-1.5 text-muted-foreground transition hover:bg-foreground/10 hover:text-foreground"
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <textarea
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              rows={8}
+              placeholder="Describe el contexto, comparte datos o lanza la pregunta al equipo…"
+              className="glass-soft w-full resize-none rounded-2xl px-4 py-3 text-sm leading-relaxed outline-none ring-1 ring-border/60 placeholder:text-muted-foreground focus:ring-primary/50"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <Tag className="h-3 w-3" /> Etiquetas
+            </label>
+            <div className="flex flex-wrap gap-1.5">
+              {availableTags.map((t) => {
+                const active = tags.includes(t);
+                return (
+                  <button
+                    key={t}
+                    onClick={() => toggleTag(t)}
+                    className={`rounded-full px-2.5 py-1 text-[11px] font-medium ring-1 transition ${
+                      active
+                        ? "bg-primary text-primary-foreground ring-primary/40"
+                        : "bg-foreground/[0.04] text-muted-foreground ring-border/60 hover:text-foreground"
+                    }`}
+                  >
+                    #{t}
+                  </button>
+                );
+              })}
+              {tags
+                .filter((t) => !availableTags.includes(t))
+                .map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => toggleTag(t)}
+                    className="rounded-full bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground ring-1 ring-primary/40"
+                  >
+                    #{t}
+                  </button>
+                ))}
+              <div className="flex items-center gap-1 rounded-full bg-foreground/[0.04] px-2 py-0.5 ring-1 ring-border/60">
+                <input
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addCustomTag();
+                    }
+                  }}
+                  placeholder="nueva…"
+                  className="w-20 bg-transparent text-[11px] outline-none placeholder:text-muted-foreground"
+                />
+                <button
+                  onClick={addCustomTag}
+                  className="rounded-full p-0.5 text-muted-foreground hover:text-foreground"
+                  aria-label="Añadir etiqueta"
+                >
+                  <Plus className="h-3 w-3" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <label className="flex cursor-pointer items-center gap-2.5 rounded-2xl bg-foreground/[0.03] px-3 py-2.5 text-sm ring-1 ring-border/60">
+            <input
+              type="checkbox"
+              checked={pinned}
+              onChange={(e) => setPinned(e.target.checked)}
+              className="h-4 w-4 rounded accent-primary"
+            />
+            <Pin className="h-3.5 w-3.5 text-muted-foreground" />
+            <span>Fijar este hilo en la parte superior del subforo</span>
+          </label>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between gap-3 border-t border-border/60 bg-foreground/[0.03] px-6 py-3">
+          <div className="flex items-center gap-1">
+            {[Paperclip, ImageIcon, Smile].map((Icon, i) => (
+              <button
+                key={i}
+                className="rounded-xl p-2 text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground"
+              >
+                <Icon className="h-4 w-4" />
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onClose}
+              className="rounded-2xl px-4 py-2 text-sm font-medium text-muted-foreground ring-1 ring-border/60 transition hover:bg-foreground/5 hover:text-foreground"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={onClose}
+              disabled={!title.trim()}
+              className="flex items-center gap-2 rounded-2xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/25 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <Send className="h-4 w-4" /> Publicar hilo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
