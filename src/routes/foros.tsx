@@ -428,6 +428,14 @@ function ForosPage() {
         </main>
       </div>
 
+      {composeOpen && (
+        <CreateThreadModal
+          subforumName={activeSubforum.sub.name}
+          forumName={activeSubforum.forum.name}
+          onClose={() => setComposeOpen(false)}
+        />
+      )}
+
       <CatAssistant />
     </div>
   );
