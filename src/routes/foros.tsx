@@ -179,6 +179,7 @@ function ForosPage() {
   const [openForums, setOpenForums] = useState<Record<string, boolean>>({ ops: true, proj: true, qa: false });
   const [activeSub, setActiveSub] = useState<string>("ln");
   const [filter, setFilter] = useState<"todos" | "sin-leer" | "fijados">("todos");
+  const [composeOpen, setComposeOpen] = useState(false);
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
