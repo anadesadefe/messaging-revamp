@@ -32,6 +32,10 @@ import {
   Smile,
   Send,
   Tag,
+  ArrowLeft,
+  Reply,
+  Quote,
+  CornerDownRight,
 } from "lucide-react";
 
 export const Route = createFileRoute("/foros")({
